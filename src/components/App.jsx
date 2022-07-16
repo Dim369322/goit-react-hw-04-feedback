@@ -6,28 +6,31 @@ import { Notification } from '../components/Notification/Notification';
 import { Feedback } from './app.styled';
 
 export default function App() {
-  const [state, setState] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  });
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
   const countFeedback = option => {
-    setState(prevState => ({
-      ...prevState,
-      [option]: prevState[option] + 1,
-    }));
+    switch (option) {
+      case 'good':
+        return setGood(state => state + 1);
+      case 'neutral':
+        return setNeutral(state => state + 1);
+      case 'bad':
+        return setBad(state => state + 1);
+
+      default:
+        return;
+    }
   };
 
   const countTotalFeedback = () => {
-    const { good, neutral, bad } = state;
     const total = good + neutral + bad;
 
     return total;
   };
 
   const countPositiveFeedbackPercentage = () => {
-    const { good, neutral, bad } = state;
     const totalFeedback = good + neutral + bad;
     const positiveFeedback = (good / totalFeedback) * 100;
 
@@ -36,13 +39,13 @@ export default function App() {
 
   const totalFeedbacks = countTotalFeedback();
   const positivePercentage = countPositiveFeedbackPercentage();
-  const { good, neutral, bad } = state;
+  const feedbackType = { bad, good, neutral };
 
   return (
     <Feedback>
       <Section title="Please leave feedback">
         <FeedbackOptions
-          options={Object.keys(state)}
+          options={Object.keys(feedbackType)}
           onLeaveFeedback={countFeedback}
         />
       </Section>
